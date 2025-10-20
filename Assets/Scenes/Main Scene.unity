@@ -374,12 +374,12 @@ PrefabInstance:
     - target: {fileID: 5739598485541644335, guid: ce418cdb69cf25c41adfea61fe766983,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5739598485541644335, guid: ce418cdb69cf25c41adfea61fe766983,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.012
       objectReference: {fileID: 0}
     - target: {fileID: 5739598485541644335, guid: ce418cdb69cf25c41adfea61fe766983,
         type: 3}
@@ -526,7 +526,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &598043617217865667
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -585,9 +585,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3e288469c894c5885d5603ad9243c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  speed: 0
+  speed: 5
+  jump: 3.32
   crouchOffsetCollider: {x: -0.09765613, y: 0.6034263}
   crouchSizeCollider: {x: 0.770646, y: 1.384484}
+  jumpOffsetCollider: {x: 0.017299, y: 1.738981}
+  jumpSizeCollider: {x: 0.897397, y: 1.485631}
   pushOffsetCollider: {x: -0.003903389, y: 0.8190418}
   pushSizeCollider: {x: 1.433123, y: 1.815715}
 --- !u!114 &598043617217865671
@@ -633,7 +636,19 @@ MonoBehaviour:
     m_ActionId: 76b759ff-bc52-43f2-a137-0a2ea7ffde5c
     m_ActionName: 'Player/Crouch[/Keyboard/leftCtrl]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 598043617217865668}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d76c5dff-185d-43cd-b3e6-1f7036526434
     m_ActionName: 'Player/Move[/Keyboard/a,/Keyboard/d]'
   - m_PersistentCalls:
