@@ -83,7 +83,7 @@
                     "name": "",
                     "id": "3653012d-7d15-4b92-9950-5878a170d9c5",
                     "path": "<Keyboard>/w",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Jump",

@@ -3,52 +3,67 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    //[SerializeField] float horizonatl;
     [SerializeField] float speed;
-    Animator animator;
+    [SerializeField] float jump;
     [SerializeField] Vector2 crouchOffsetCollider;
     [SerializeField] Vector2 crouchSizeCollider;
-    
+    [SerializeField] Vector2 jumpOffsetCollider;
+    [SerializeField] Vector2 jumpSizeCollider;
     [SerializeField] Vector2 pushOffsetCollider;
     [SerializeField] Vector2 pushSizeCollider;
-    
-    BoxCollider2D playerBoxCollider;
+    private Vector3 position;
+    private float horizontalMovement;
+
+    private BoxCollider2D playerBoxCollider;
+    private Animator animator;
+    private Rigidbody2D playerRigidBody;
 
     private Vector3 originalScale;
     private Vector2 originalColliderSize;
     private Vector2 originalColliderOffset;
 
-   
+
+    void Awake()
+    {
+         //Get Components
+        playerBoxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        playerRigidBody = GetComponent<Rigidbody2D>();
+    }
 
     void Start()
     {
-        //Get Components
-        playerBoxCollider = GetComponent<BoxCollider2D>();
-        animator = GetComponent<Animator>();
-
         originalScale = transform.localScale;
         originalColliderSize = playerBoxCollider.size;
         originalColliderOffset = playerBoxCollider.offset;
-
-        //UpdateColliderSize();
-
-
     }
 
     void Update()
     {
-        speed = Input.GetAxisRaw("Horizontal");
-        animator.SetFloat("Speed", Mathf.Abs(speed));
+        MovePlayer();    
+    }
 
-        if (speed < 0)
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 moveInput = context.ReadValue<Vector2>();
+        horizontalMovement = moveInput.x;
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMovement));
+
+        if (horizontalMovement != 0)
         {
-            transform.localScale = new Vector3(-originalScale.x, originalScale.y, originalScale.z);
-        }
-        else if (speed > 0)
-        {
-            transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
+            transform.localScale = new Vector3(Mathf.Sign(horizontalMovement) * originalScale.x, originalScale.y, originalScale.z);
         }
 
+        
 
+    }
+
+    private void MovePlayer()
+    {
+        position = transform.position;
+        position.x += horizontalMovement * speed * Time.deltaTime;
+        transform.position = position;
     }
 
     public void OnCrouch(InputAction.CallbackContext context)
@@ -71,7 +86,18 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             animator.SetTrigger("isJumping");
+            playerRigidBody.AddForceY(jump, ForceMode2D.Impulse);
         }
+    }
+
+    public void OnJumpStart()
+    {
+        UpdateColliderSize(jumpSizeCollider, jumpOffsetCollider);
+    }
+    
+    public void OnJumpEnd()
+    {
+        UpdateColliderSize(originalColliderSize, originalColliderOffset);
     }
     
 
