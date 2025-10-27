@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Rigidbody2D playerRigidBody;
 
+    private bool isCrouching = false;
     private Vector3 originalScale;
     private Vector2 originalColliderSize;
     private Vector2 originalColliderOffset;
@@ -46,9 +48,14 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        Vector2 moveInput = context.ReadValue<Vector2>();
-        horizontalMovement = moveInput.x;
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMovement));
+        
+        if (!isCrouching)
+        {
+            Vector2 moveInput = context.ReadValue<Vector2>();
+            horizontalMovement = moveInput.x;
+            animator.SetFloat("Speed", Mathf.Abs(horizontalMovement));
+        }
+        
 
         if (horizontalMovement != 0)
         {
@@ -71,19 +78,22 @@ public class PlayerController : MonoBehaviour
 
         if (context.performed)
         {
+            isCrouching = true;
             animator.SetBool("isCrouching", true);
             UpdateColliderSize(crouchSizeCollider, crouchOffsetCollider);
         }
         else if (context.canceled)
         {
+            isCrouching = false;
             animator.SetBool("isCrouching", false);
             UpdateColliderSize(originalColliderSize, originalColliderOffset);
+            
         }
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isCrouching)
         {
             animator.SetTrigger("isJumping");
             playerRigidBody.AddForceY(jump, ForceMode2D.Impulse);
