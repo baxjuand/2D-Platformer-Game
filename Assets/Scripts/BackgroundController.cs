@@ -22,6 +22,7 @@ public class BackgroundController : MonoBehaviour
 
     private void MoveBackground()
     {
+        
         float distance = cam.transform.position.x * parallaxEffect;
         transform.position = new Vector3(startPosition + distance, transform.position.y, transform.position.z);
     }
